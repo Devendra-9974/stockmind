@@ -4,7 +4,7 @@ routers/train.py
 from fastapi import APIRouter, BackgroundTasks, HTTPException
 from fastapi.responses import StreamingResponse
 import asyncio, json, uuid, traceback
-from backend.models.schemas import TrainRequest
+from models.schemas import TrainRequest
 from services.predictor import SelfCorrectingPredictor, TrainingProgress
 
 router = APIRouter()

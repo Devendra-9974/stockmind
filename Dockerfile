@@ -2,14 +2,11 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y \
-    gcc \
-    g++ \
-    && rm -rf /var/lib/apt/lists/*
-
-COPY requirements.txt .
+RUN apt-get update && apt-get install -y gcc g++ && rm -rf /var/lib/apt/lists/*
 
 RUN pip install --upgrade pip setuptools wheel
+
+RUN pip install --only-binary=:all: pandas==2.0.3 numpy==1.24.4
 
 RUN pip install \
     fastapi==0.100.1 \
@@ -18,11 +15,7 @@ RUN pip install \
     python-multipart==0.0.6 \
     aiofiles==23.1.0 \
     httpx==0.24.1 \
-    python-dotenv==1.0.0
-
-RUN pip install \
-    numpy==1.24.4 \
-    pandas==2.0.3 \
+    python-dotenv==1.0.0 \
     scikit-learn==1.3.2 \
     matplotlib==3.7.5 \
     yfinance==0.2.40 \

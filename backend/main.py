@@ -3,9 +3,9 @@ Stock Predictor — FastAPI Backend (Production Ready)
 """
 import sys
 import os
-
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 # Fix import paths for deployment
-sys.path.insert(0, os.path.dirname(__file__))
+# sys.path.insert(0, os.path.dirname(__file__))
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware

@@ -1,7 +1,7 @@
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from fastapi import APIRouter, HTTPException
-from models.schemas import PredictRequest
+from schemas.schemas import PredictRequest
 from services.predictor import SelfCorrectingPredictor
 router = APIRouter()
 

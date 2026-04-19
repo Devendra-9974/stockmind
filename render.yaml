@@ -4,8 +4,7 @@ services:
     runtime: python
     rootDir: backend
     buildCommand: "python -m pip install --upgrade pip && python -m pip install --only-binary=:all: numpy pandas scikit-learn matplotlib && python -m pip install -r requirements.txt"
-    startCommand: "python -m uvicorn main:app --host 0.0.0.0 --port $PORT"
-    envVars:
+startCommand: "cd /opt/render/project/src/backend && python -m uvicorn main:app --host 0.0.0.0 --port $PORT"    envVars:
       - key: ALLOWED_ORIGINS
         value: http://localhost:3000
       - key: PYTHON_VERSION

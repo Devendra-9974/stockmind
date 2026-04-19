@@ -1,7 +1,47 @@
-# StockMind — Self-Correcting LSTM Stock Predictor
+# StockMind 📈
+### Self-Correcting LSTM Stock Price Predictor
 
-A full-stack stock price prediction app using a self-correcting LSTM neural network,
-Yahoo Finance data, FastAPI backend, and React frontend.
+A full-stack AI-powered stock prediction web app built with **FastAPI + React**.  
+Fetches real market data from Yahoo Finance, trains a self-correcting LSTM neural network, and forecasts future prices with interactive charts.
+
+🔗 **Live Demo:** [https://stockmind-iota.vercel.app](https://stockmind-iota.vercel.app)  
+🔗 **Backend API:** [https://stockmind-8cx5.onrender.com](https://stockmind-8cx5.onrender.com)
+
+---
+
+## Features
+
+- 📡 **Real-time stock data** via Yahoo Finance API (no API key needed)
+- 🧠 **Self-correcting LSTM model** — learns from its own prediction errors
+- 📊 **16 technical indicators** — RSI, MACD, Bollinger Bands, Moving Averages, and more
+- 🔴 **Live training console** — watch loss curves update in real time via SSE streaming
+- 🔮 **Multi-day forecast** — predict up to 60 days into the future
+- 💾 **Model persistence** — save and reload trained models
+- 🌙 **Dark terminal UI** — built with React + Tailwind CSS + Recharts
+
+---
+
+## Tech Stack
+
+### Backend
+| Tool | Purpose |
+|------|---------|
+| FastAPI | REST API framework |
+| NumPy / TensorFlow | ML model (NumPy fallback if TF unavailable) |
+| yfinance | Yahoo Finance data |
+| pandas | Data processing |
+| scikit-learn | Feature scaling |
+| Server-Sent Events | Live training progress streaming |
+
+### Frontend
+| Tool | Purpose |
+|------|---------|
+| React 18 | UI framework |
+| Vite | Build tool |
+| Tailwind CSS | Styling |
+| Recharts | Charts and visualizations |
+| Axios | API calls |
+| React Router | Navigation |
 
 ---
 
@@ -10,116 +50,88 @@ Yahoo Finance data, FastAPI backend, and React frontend.
 ```
 stock-predictor/
 ├── backend/
-│   ├── main.py                  ← FastAPI app entry point
-│   ├── requirements.txt
+│   ├── main.py                  ← FastAPI entry point
+│   ├── requirements.txt         ← Python dependencies
+│   ├── Dockerfile               ← Docker config for Render
 │   ├── models/
 │   │   └── schemas.py           ← Pydantic request/response models
 │   ├── routers/
 │   │   ├── health.py            ← GET /health
-│   │   ├── stocks.py            ← GET /api/stocks/quote/:ticker, /history, /info, /popular
-│   │   ├── train.py             ← POST /api/train/start + SSE stream
-│   │   └── predict.py           ← POST /api/predict/forecast
+│   │   ├── stocks.py            ← Stock quotes, history, info
+│   │   ├── train.py             ← Model training + SSE streaming
+│   │   └── predict.py           ← Forecast generation
 │   └── services/
-│       └── predictor.py         ← Core LSTM model + self-correction logic
+│       └── predictor.py         ← Core LSTM + self-correction logic
 │
 ├── frontend/
-│   ├── index.html
-│   ├── vite.config.js
-│   ├── tailwind.config.js
-│   └── src/
-│       ├── App.jsx              ← Router + nav
-│       ├── api/client.js        ← Axios + SSE helpers
-│       ├── components/
-│       │   ├── Card.jsx         ← Card, Metric, Badge, Spinner
-│       │   ├── PriceChart.jsx   ← Recharts price + forecast chart
-│       │   ├── LossChart.jsx    ← Training loss curve
-│       │   ├── ForecastTable.jsx← Forecast day-by-day table
-│       │   ├── TickerSearch.jsx ← Autocomplete ticker input
-│       │   └── TrainingConsole.jsx ← Live SSE log
-│       └── pages/
-│           ├── Dashboard.jsx    ← Market overview + saved models
-│           ├── TrainPage.jsx    ← Full training UI
-│           ├── PredictPage.jsx  ← Chart + forecast view
-│           └── ModelsPage.jsx   ← Model library + architecture
+│   ├── src/
+│   │   ├── api/client.js        ← Axios API client
+│   │   ├── components/
+│   │   │   ├── Card.jsx         ← Reusable UI components
+│   │   │   ├── PriceChart.jsx   ← Price + forecast chart
+│   │   │   ├── LossChart.jsx    ← Training loss curve
+│   │   │   ├── ForecastTable.jsx← Day-by-day forecast table
+│   │   │   ├── TickerSearch.jsx ← Autocomplete ticker input
+│   │   │   └── TrainingConsole.jsx ← Live SSE log
+│   │   └── pages/
+│   │       ├── Dashboard.jsx    ← Market overview
+│   │       ├── TrainPage.jsx    ← Training UI
+│   │       ├── PredictPage.jsx  ← Prediction + charts
+│   │       └── ModelsPage.jsx   ← Saved models library
+│   └── vercel.json              ← Vercel deployment config
 │
-├── setup.sh    ← One-click setup (macOS/Linux)
-├── setup.bat   ← One-click setup (Windows)
+├── render.yaml                  ← Render deployment config
 └── README.md
 ```
 
 ---
 
-## Prerequisites
+## Local Development
 
-| Tool      | Version  | Install |
-|-----------|----------|---------|
-| Python    | 3.10+    | https://python.org |
-| Node.js   | 18+      | https://nodejs.org |
-| npm       | 9+       | bundled with Node  |
+### Prerequisites
+- Python 3.11 — [Download](https://python.org/ftp/python/3.11.9/python-3.11.9-amd64.exe)
+- Node.js 18+ — [Download](https://nodejs.org)
+- Git — [Download](https://git-scm.com)
 
----
-
-## Setup (macOS / Linux)
+### Backend Setup
 
 ```bash
-# 1. Clone or unzip the project
-cd stock-predictor
-
-# 2. Run the one-click setup
-bash setup.sh
-
-# 3. Start the backend (Terminal 1)
 cd backend
-source venv/bin/activate
-uvicorn main:app --reload --port 8000
 
-# 4. Start the frontend (Terminal 2)
-cd frontend
-npm run dev
+# Create virtual environment
+py -3.11 -m venv venv
 
-# 5. Open browser
-open http://localhost:3000
-```
-
-## Setup (Windows)
-
-```bat
-REM Double-click setup.bat, then:
-
-REM Terminal 1 — Backend
-cd backend
+# Activate (Windows)
 venv\Scripts\activate
-uvicorn main:app --reload --port 8000
 
-REM Terminal 2 — Frontend
-cd frontend
-npm run dev
+# Activate (macOS/Linux)
+source venv/bin/activate
+
+# Upgrade pip
+python -m pip install --upgrade pip
+
+# Install dependencies
+python -m pip install -r requirements.txt
+
+# Start backend
+uvicorn main:app --host 127.0.0.1 --port 8000 --reload
 ```
 
-Then open http://localhost:3000
+Backend runs at: http://localhost:8000
 
----
-
-## Manual Setup (if the script fails)
-
-### Backend
-
-```bash
-cd backend
-python3 -m venv venv
-source venv/bin/activate          # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-mkdir -p models charts
-uvicorn main:app --reload --port 8000
-```
-
-### Frontend
+### Frontend Setup
 
 ```bash
 cd frontend
+
+# Install dependencies
 npm install
+
+# Start frontend
 npm run dev
 ```
+
+Frontend runs at: http://localhost:3000
 
 ---
 
@@ -134,7 +146,7 @@ GET /health
 ### Stocks
 ```
 GET /api/stocks/quote/{ticker}
-GET /api/stocks/history/{ticker}?period=6mo
+GET /api/stocks/history/{ticker}
 GET /api/stocks/info/{ticker}
 GET /api/stocks/popular
 GET /api/stocks/models
@@ -146,11 +158,8 @@ POST /api/train/start
 Body: { ticker, period, epochs, seq_len, retrain }
 → { job_id, ticker }
 
-GET /api/train/stream/{job_id}      ← SSE stream
+GET /api/train/stream/{job_id}   ← SSE stream
 Events: epoch | status | done | error
-
-GET /api/train/status/{job_id}
-→ { done, result, error }
 ```
 
 ### Predict
@@ -159,7 +168,7 @@ POST /api/predict/forecast
 Body: { ticker, forecast_days, period }
 → { forecast: [{date, price, change_pct}], metrics }
 
-GET /api/predict/history/{ticker}?period=1y
+GET /api/predict/history/{ticker}
 → { dates, actual, predicted, metrics }
 ```
 
@@ -167,54 +176,106 @@ GET /api/predict/history/{ticker}?period=1y
 
 ## How the Self-Correction Works
 
-1. **Initial training** — Standard LSTM training with early stopping and learning rate decay.
-2. **Error measurement** — After training, the model predicts on the validation set.
-3. **Sample weighting** — Each sample receives a weight proportional to its prediction error.
-   Samples the model got badly wrong get higher weight.
-4. **Correction pass** — The model is fine-tuned on the validation set with these weights,
-   forcing it to focus more gradient steps on its mistakes.
-5. **On retrain** — The entire process repeats with fresh market data, continuously adapting.
+```
+1. Initial Training   → LSTM trains on 85% of data
+2. Validation         → Model predicts on remaining 15%
+3. Error Measurement  → Calculates residual per sample
+4. Sample Weighting   → Bigger mistake = higher weight
+5. Correction Pass    → Fine-tunes on weighted samples
+6. Result             → Model focuses on its worst mistakes
+```
 
 ---
 
-## Features
+## Train Models Locally & Deploy
 
-- Real Yahoo Finance data via `yfinance`
-- 16 input features: OHLCV + MA7/21/50, RSI, Bollinger Bands, MACD, ROC, Volatility
-- 3-layer stacked LSTM with Dropout
-- Huber loss (robust to outliers)
-- Self-correcting error-weighted fine-tuning
-- Live training progress via Server-Sent Events (SSE)
-- Persistent model save/load
-- React dashboard with interactive Recharts visualizations
-- Dark terminal aesthetic UI
+Train on your PC then commit to GitHub so models are available on the live site:
+
+```python
+# Run inside backend/ with venv activated
+python -c "
+from services.predictor import SelfCorrectingPredictor
+
+tickers = ['AAPL', 'TSLA', 'MSFT', 'GOOGL', 'NVDA']
+for ticker in tickers:
+    print(f'Training {ticker}...')
+    try:
+        p = SelfCorrectingPredictor(ticker)
+        p.fetch_and_prepare('2y')
+        p.train(epochs=50)
+        p.save()
+        print(f'{ticker} saved!')
+    except Exception as e:
+        print(f'{ticker} failed: {e}')
+"
+```
+
+```bash
+git add backend/models/
+git commit -m "Add pre-trained models"
+git push
+```
 
 ---
 
-## Troubleshooting
+## Deployment
 
-**TensorFlow install fails on Apple Silicon (M1/M2/M3)**
-```bash
-pip install tensorflow-macos tensorflow-metal
-```
+### Backend — Render (Docker)
+1. Connect GitHub repo to [render.com](https://render.com)
+2. New Web Service → **Docker** runtime
+3. Dockerfile path: `./backend/Dockerfile`
+4. Env var: `ALLOWED_ORIGINS = https://your-vercel-app.vercel.app`
 
-**TensorFlow install fails on CPU-only machine**
-```bash
-pip install tensorflow-cpu
-```
+### Frontend — Vercel
+1. Connect GitHub repo to [vercel.com](https://vercel.com)
+2. Root directory: `frontend`
+3. Env var: `VITE_API_URL = https://your-render-url.onrender.com`
+4. Deploy
 
-**Port 8000 already in use**
-```bash
-uvicorn main:app --reload --port 8001
-# Update frontend/vite.config.js proxy target to :8001
-```
+---
 
-**yfinance rate limited**
-Yahoo Finance occasionally throttles requests. Wait 30 seconds and retry.
+## Model Input Features (16 total)
+
+| Feature | Description |
+|---------|-------------|
+| Close, Open, High, Low | OHLC prices |
+| Volume | Trading volume |
+| MA_7, MA_21, MA_50 | Moving averages |
+| RSI | Relative Strength Index |
+| MACD, MACD_signal | Momentum indicators |
+| BB_width | Bollinger Band width |
+| ROC_5, ROC_10 | Rate of change |
+| Volatility | Rolling std deviation |
+| Vol_change | Volume % change |
+
+---
+
+## Tips for Best Predictions
+
+- Use **2y period** for more training data
+- **50-80 epochs** gives a good balance of speed vs accuracy
+- MAPE below **3%** means the model is performing well
+- Retrain weekly to incorporate fresh market data
+
+---
+
+## Known Limitations
+
+- Yahoo Finance occasionally rate-limits — wait 30s and retry
+- Render free tier sleeps after 15 mins inactivity — first request may be slow
+- TensorFlow not available on Render free tier (512MB RAM) — NumPy fallback used
+- Stock predictions are for educational purposes only
 
 ---
 
 ## Disclaimer
 
-This project is for educational purposes only. Do not use model predictions
-for real financial decisions. Past performance does not guarantee future results.
+⚠️ This project is for **educational purposes only**.  
+Do not use model predictions for real financial decisions.  
+Past performance does not guarantee future results.
+
+---
+
+## License
+
+MIT — free to use, modify, and distribute.

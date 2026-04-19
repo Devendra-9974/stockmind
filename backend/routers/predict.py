@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from models.schemas import PredictRequest
+from backend.models.schemas import PredictRequest
 from services.predictor import SelfCorrectingPredictor
 router = APIRouter()
 
